@@ -1,0 +1,87 @@
+<?php
+include_once 'config/Database.php';
+include_once 'class/User.php';
+include_once 'class/Books.php';
+
+$database = new Database();
+$db = $database->getConnection();
+
+$user = new User($db);
+
+if (!$user->loggedIn()) {
+    header('Location: index.php');
+}
+$pageTitle = 'Manage Rack';
+
+?>
+
+<?php include ('inc/header.php'); ?>
+<div class="container-xl">
+    <div class="row">
+        <div class="col">
+            <h2>Rack Location List</h2>
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="col-md-2" align="right">
+                        <button id="addRack" type="button" class="btn app-btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#add-rack-modal" title="Add rack">
+                            <i class="fas fa-plus-circle"></i> Add Rack
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <table id="rackListing" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sn.</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="add-rack-modal" tabindex="-1" aria-labelledby="add-rack-modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add-rack-modalLabel"><i class="fa fa-plus"></i> Edit Rack</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" id="rackForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Rack</label>
+                            <input type="text" name="name" id="name" autocomplete="off" class="form-control"
+                                placeholder="Rack name" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="">Select</option>
+                                <option value="Enable">Enable</option>
+                                <option value="Disable">Disable</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="rackid" id="rackid" />
+                        <input type="hidden" name="action" id="action" value="" />
+                        <input type="submit" name="save" id="save" class="btn app-btn-primary" value="Save" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            aria-label="Close">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+$jsFile = 'rack.js';
+include ('inc/footer.php');
+?>
